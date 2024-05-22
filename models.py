@@ -1,12 +1,26 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
+
+from .database import Base
 
 
-class Contact(BaseModel):
-    """Representation of a contact in the system."""
+class Contact(Base):
+    __tablename__ = "contacts"
     
-    id: int
-    first_name: str
-    last_name: str
-    phone_number: int
-    email: str
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String)
+    phone_number = Column(Integer)
+    email = Column(String)
+    group_id = Column(Integer, ForeignKey("group.id"))
+    
+    group = relationship("Group", back_populates="contacts")
+    
+
+class Group(Base):
+    __tablename__ = "groups"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+
+    contacts = relationship("Contact", back_populates="group")
