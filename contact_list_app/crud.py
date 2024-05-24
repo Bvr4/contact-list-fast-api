@@ -41,7 +41,7 @@ def update_contact(db: Session, contact_id, contact: schemas.ContactBase):
     for var, value in vars(contact).items():
         setattr(db_contact, var, value) if value else None
 
-    db.add(db_contact) # à tester > est-ce que cela update ou crée un nouvel enregistrement ?
+    db.add(db_contact)
     db.commit()
     db.refresh(db_contact)
     return db_contact
@@ -69,7 +69,7 @@ def update_group(db: Session, group_id: int, group: schemas.GroupCreate):
         return None
     
     db_group.name = group.name
-    db.add(db_group) # à tester > est-ce que cela update ou crée un nouvel enregistrement ?
+    db.add(db_group) 
     db.commit()
     db.refresh(db_group)
     return db_group
