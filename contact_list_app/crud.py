@@ -63,6 +63,18 @@ def create_group(db: Session, group: schemas.GroupCreate):
     return db_group
 
 
+def update_group(db: Session, group_id: int, group: schemas.GroupCreate):
+    db_group = db.query(models.Group).filter(models.Group.id == group_id).one_or_none()
+    if db_group is None:
+        return None
+    
+    db_group.name = group.name
+    db.add(db_group) # à tester > est-ce que cela update ou crée un nouvel enregistrement ?
+    db.commit()
+    db.refresh(db_group)
+    return db_group
+
+
 def delete_group(db: Session, group_id: int):
     db.query(models.Group).filter(models.Group.id == group_id).delete()
     db.commit()

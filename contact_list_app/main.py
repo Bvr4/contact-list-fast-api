@@ -54,11 +54,19 @@ def create_group(group: schemas.GroupCreate, db: Session = Depends(get_db)):
 
 
 # Update a group
+@app.put("/api/v1/groups/{group_id}", response_model=schemas.Group)
+def update_group(group_id: int, group: schemas.GroupCreate, db: Session = Depends(get_db)):
+    db_group = crud.get_group(db, group_id=group_id)
+    if db_group is None:
+        raise HTTPException(status_code=404, detail=f"Group with {group_id=} does not exist")
+
+    db_group = crud.update_group(db, group_id, group)
+    return db_group
 
 
 # Delete a group
 @app.delete("/api/v1/groups/{group_id}")
-async def delete_group(group_id: int, db: Session = Depends(get_db)):    
+def delete_group(group_id: int, db: Session = Depends(get_db)):    
     db_group = crud.get_group(db, group_id=group_id)
     if db_group is None:
         raise HTTPException(status_code=404, detail=f"Group with {group_id=} does not exist")
@@ -89,18 +97,30 @@ def get_contact(contact_id: int, db: Session = Depends(get_db)):
 
 
 # Create a contact
-@app.post("/api/v1/contacts", response_model=schemas.Contact)
+@app.post("/api/v1/contacts", response_model=schemas.ContactCreate)
 def create_contact(contact: schemas.ContactCreate, db: Session = Depends(get_db)):
     db_contact = crud.create_contact(db, contact)
     return db_contact
 
 
 # Update a contact
+@app.patch("/api/v1/contacts/{contact_id}", response_model=schemas.Contact)
+def update_contact(contact_id: int, contact: schemas.ContactBase, db: Session = Depends(get_db)):
+    """
+    To partially update contact information, fill only the desired fields.
+    """
+    db_contact = crud.get_contact(db, contact_id=contact_id)
+    if db_contact is None:
+        raise HTTPException(status_code=404, detail=f"Contact with {contact_id=} does not exist")
+    
+    db_contact = crud.update_contact(db, contact_id, contact)
+    
+    return db_contact
 
 
 # Delete a contact
 @app.delete("/api/v1/contacts/{contact_id}")
-async def delete_contact(contact_id: int, db: Session = Depends(get_db)):    
+def delete_contact(contact_id: int, db: Session = Depends(get_db)):    
     db_contact = crud.get_contact(db, contact_id=contact_id)
     if db_contact is None:
         raise HTTPException(status_code=404, detail=f"Contact with {contact_id=} does not exist")

@@ -3,18 +3,16 @@ from pydantic import BaseModel, EmailStr
 
 
 class ContactBase(BaseModel):
-    first_name: Optional[str]
-    last_name: Optional[str]
-    phone_number: Optional[str]
-    email: Optional[str]
-    group_id: Optional[int]
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    email: Optional[str] = None
+    group_id: Optional[int] = None
 
 
 class ContactCreate(ContactBase):
     first_name: str
-    last_name: Union[str, None] = None
     phone_number: str
-    email: Union[EmailStr, None] = None
     group_id: int
 
 
