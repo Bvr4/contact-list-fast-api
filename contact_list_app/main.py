@@ -18,6 +18,7 @@ def get_db():
     finally:
         db.close()
 
+
 @app.get("/")
 async def root():
     return {"message": "This is a contact list API"}
@@ -97,7 +98,7 @@ def get_contact(contact_id: int, db: Session = Depends(get_db)):
 
 
 # Create a contact
-@app.post("/api/v1/contacts", response_model=schemas.ContactCreate)
+@app.post("/api/v1/contacts", response_model=schemas.Contact)
 def create_contact(contact: schemas.ContactCreate, db: Session = Depends(get_db)):
     db_contact = crud.create_contact(db, contact)
     return db_contact
